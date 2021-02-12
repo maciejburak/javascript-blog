@@ -1,3 +1,4 @@
+'use strict';
 const articles = document.querySelectorAll('.post');
 const titleList = document.querySelector('.titles');
 let html = '';
