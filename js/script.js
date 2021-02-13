@@ -1,9 +1,8 @@
 'use strict';
 const articles = document.querySelectorAll('.post');
 const titleList = document.querySelector('.titles');
-let html = '';
 
-function generateTitleLinks() {
+const generateTitleLinks = function () {
     /* for each article */
     for (let article of articles) {
         /* get the article id */
@@ -13,8 +12,7 @@ function generateTitleLinks() {
         /* create HTML of the link */
         const linkHTML = '<li><a href=#' + articleId + '><span>' + articleTitle + '</span></a></li>';
         /* insert link into html variable */
-        html = html + linkHTML;
-        titleList.innerHTML = html;
+        titleList.insertAdjacentHTML('beforeend', linkHTML);
     }
 }
 generateTitleLinks();
@@ -23,10 +21,10 @@ const titleClickHandler = function (event) {
     const clickedElement = this;
     event.preventDefault();
     /* remove class 'active' from all article links  */
-    const activeLinks = document.querySelectorAll('.titles a.active');
+    /*const activeLinks = document.querySelectorAll('.titles a.active');
     for (let activeLink of activeLinks) {
         activeLink.classList.remove('active');
-    }
+    }*/
     /* add class 'active' to the clicked link */
     clickedElement.classList.add('active');
     /* remove class 'active' from all articles */
