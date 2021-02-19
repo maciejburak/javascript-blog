@@ -79,6 +79,7 @@ body {
 
 .list-horizontal li {
   display: inline-block;
+  margin-right: 10px;
 }
 
 /* Authors */
@@ -106,5 +107,45 @@ body {
 
 .post-tags p {
   margin: 0 10px 0 0;
+}
+
+.tag-size-1{
+  font-size: 20px;
+}
+.tag-size-2{
+  font-size: 25px;
+}
+.tag-size-3{
+  font-size: 30px;
+}
+.tag-size-4{
+  font-size: 35px;
+}
+.tag-size-5{
+  font-size: 40px;
+}
+.tag-size-6{
+  font-size: 45px;
+}
+.tag-size-7{
+  font-size: 50px;
+}
+.tag-size-8{
+  font-size: 55px;
+}
+.tag-size-9{
+  font-size: 60px;
+}
+.tag-size-10{
+  font-size: 65px;
+}
+
+.tags li{
+  display:inline-block;
+  margin: 5px;
+}
+.authors li{
+  display:inline-block;
+  margin: 5px;
 }
 /*# sourceMappingURL=style.css.map */
