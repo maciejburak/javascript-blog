@@ -208,7 +208,7 @@ const addAuthorToArticle = function () {
 
     let i2 = 0
     for (let elementInFinalArrayWithAuthors of finalArrayWithAuthors) {
-        const linkHTMLWithAuthorsFromArticles = '<li><a href="#' + authorsLinks[i2] + '" class= tag-size-' + authorsCount[i2] + '>' + finalArrayWithAuthors[i2] + '</a> <span></span></li > ';
+        const linkHTMLWithAuthorsFromArticles = '<li><a href="#' + authorsLinks[i2] + '">' + finalArrayWithAuthors[i2] + '</a> <span>(' + authorsCount[i2] + ')</span></li > ';
         authorsList.insertAdjacentHTML('beforeend', linkHTMLWithAuthorsFromArticles);
         i2++;
     }
