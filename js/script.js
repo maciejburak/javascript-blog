@@ -1,18 +1,24 @@
 'use strict';
+const templates = {
+    articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
+    tagLink: Handlebars.compile(document.querySelector('#template-tag-link').innerHTML),
+    authorLink: Handlebars.compile(document.querySelector('#template-author-link').innerHTML),
+    tagscloud: Handlebars.compile(document.querySelector('#template-tagscloud-link').innerHTML),
+    authorList: Handlebars.compile(document.querySelector('#template-authorList-link').innerHTML),
+    articlesListFromTags: Handlebars.compile(document.querySelector('#template-articlesList-link').innerHTML),
+    articlesListFromAuthors: Handlebars.compile(document.querySelector('#template-articlesList2-link').innerHTML),
+}
+
 const articles = document.querySelectorAll('.post');
 const titleList = document.querySelector('.titles');
 const titlesOfArticles = document.querySelector('.titles');
 
 const generateTitleLinks = function () {
-    /* for each article */
     for (let article of articles) {
-        /* get the article id */
         const articleId = article.getAttribute('id');
-        /* find the title element */
         const articleTitle = article.querySelector('.post-title').innerHTML;
-        /* create HTML of the link */
-        const linkHTML = '<li><a href=#' + articleId + '><span>' + articleTitle + '</span></a></li>';
-        /* insert link into html variable */
+        const linkHTMLData = { id: articleId, title: articleTitle };
+        const linkHTML = templates.articleLink(linkHTMLData);
         titleList.insertAdjacentHTML('beforeend', linkHTML);
     }
 }
@@ -21,18 +27,13 @@ generateTitleLinks();
 const titleClickHandler = function (event) {
     const clickedElement = this;
     event.preventDefault();
-    /* add class 'active' to the clicked link */
     clickedElement.classList.add('active');
-    /* remove class 'active' from all articles */
     const activeArticles = document.querySelectorAll('.posts .active');
     for (let activeArticle of activeArticles) {
         activeArticle.classList.remove('active');
     }
-    /* get 'href' attribute from the clicked link */
     const articleSelector = clickedElement.getAttribute('href');
-    /* find the correct article using the selector (value of 'href' attribute) */
     const targetArticle = document.querySelector(articleSelector);
-    /* add class 'active' to the correct article */
     targetArticle.classList.add('active');
 };
 
@@ -50,12 +51,12 @@ const generateTags = function () {
     for (let article of articles) {
         const articleTagsList = article.querySelector('.post-tags .list');
         const articleTags = article.getAttribute('data-tags');
-        //console.log(articleTags);
         const articleTagsArray = articleTags.split(' ');
         tablica.push(articleTagsArray);
         for (let tag of articleTagsArray) {
-            const linkHTMLWithTag = '<li><a href=#tag-' + tag + '><span>' + tag + '</span></a></li>';
-            articleTagsList.insertAdjacentHTML('beforeend', linkHTMLWithTag);
+            const linkHTMLData2 = { taghref: tag, tag: tag };
+            const linkHTML2 = templates.tagLink(linkHTMLData2);
+            articleTagsList.insertAdjacentHTML('beforeend', linkHTML2);
         }
     }
     const arrayWithAllTags = [].concat.apply([], tablica);
@@ -89,8 +90,9 @@ const generateTags = function () {
 
     let i1 = 0;
     for (let elementInFinalArray of finalArray) {
-        const linkHTMLWithTagFromArticle = '<li><a href="#tag-' + finalArray[i1] + '" class= tag-size-' + allTagsHTML[i1] + '>' + finalArray[i1] + '</a> <span></span></li > ';
-        tagsList.insertAdjacentHTML('beforeend', linkHTMLWithTagFromArticle);
+        const linkHTMLData4 = { tagscloudName: finalArray[i1], tagSize: allTagsHTML[i1] };
+        const linkHTML4 = templates.tagscloud(linkHTMLData4);
+        tagsList.insertAdjacentHTML('beforeend', linkHTML4);
         i1++;
     }
 }
@@ -100,7 +102,6 @@ const tagClickHandler = function (event) {
     titlesOfArticles.innerHTML = '';
     const clickedTag = this;
     const tagOfArticle = clickedTag.getAttribute('href').replace('#tag-', '');
-    console.log(tagOfArticle);
     const finalArrayWithTitles = [];
     for (let article of articles) {
         article.classList.remove('active');
@@ -113,10 +114,10 @@ const tagClickHandler = function (event) {
             let i = 0;
             if (exactlyThis === true) {
                 const numberOfArticle = arrayWithid[i].replace('-', ' ').charAt(0).toUpperCase() + arrayWithid[i].replace('-', ' ').slice(1);
-                const linkHTMLWithTag = '<li><a href=#' + arrayWithid[i] + '><span>' + numberOfArticle + '</span></a></li>';
-                titlesOfArticles.insertAdjacentHTML('beforeend', linkHTMLWithTag);
+                const linkHTMLData6 = { articleLinkFromTag: arrayWithid[i], articleNameFromTag: numberOfArticle };
+                const linkHTML6 = templates.articlesListFromTags(linkHTMLData6);
+                titlesOfArticles.insertAdjacentHTML('beforeend', linkHTML6);
                 finalArrayWithTitles.push(arrayWithid[i])
-
             }
         }
     }
@@ -167,11 +168,11 @@ const addAuthorToArticle = function () {
         const author = article.getAttribute('data-author');
         const authorInHref = author.replace(' ', '-').toLowerCase();
         const titles = article.querySelector('.post-author');
-        let linkHTMLWithAuthor = 'by ' + '<a href=#' + authorInHref + '>' + author + '</a>'
-        titles.innerHTML = linkHTMLWithAuthor;
+        const linkHTMLData3 = { authorhref: authorInHref, author: author };
+        const linkHTML3 = templates.authorLink(linkHTMLData3);
+        titles.innerHTML = linkHTML3;
         arrayWithAllAuthors.push(author);
     }
-    console.log(arrayWithAllAuthors);
     let i = 0;
     const finalArrayWithAuthors = [];
     for (let element of arrayWithAllAuthors) {
@@ -208,8 +209,9 @@ const addAuthorToArticle = function () {
 
     let i2 = 0
     for (let elementInFinalArrayWithAuthors of finalArrayWithAuthors) {
-        const linkHTMLWithAuthorsFromArticles = '<li><a href="#' + authorsLinks[i2] + '">' + finalArrayWithAuthors[i2] + '</a> <span>(' + authorsCount[i2] + ')</span></li > ';
-        authorsList.insertAdjacentHTML('beforeend', linkHTMLWithAuthorsFromArticles);
+        const linkHTMLData5 = { authorLink: authorsLinks[i2], authorName: finalArrayWithAuthors[i2], authorCount: authorsCount[i2] };
+        const linkHTML5 = templates.authorList(linkHTMLData5);
+        authorsList.insertAdjacentHTML('beforeend', linkHTML5);
         i2++;
     }
 }
@@ -228,22 +230,22 @@ const addAuthorsToList = function (event) {
         const idOfArticleFromAuthor = article.getAttribute('id');
         const arrayWithidFromAuthor = []
         arrayWithidFromAuthor.push(idOfArticleFromAuthor);
-        //console.log(arrayWithid);
-
         if (dataAuthor === authorFromTitle) {
             let numberOfArticleFromAuthor = arrayWithidFromAuthor[i].replace('-', ' ').charAt(0).toUpperCase() + arrayWithidFromAuthor[i].replace('-', ' ').slice(1);
-            //console.log(numberOfArticle);
-            let linkHTMLWithArticle = '<li><a href=#' + arrayWithidFromAuthor[i] + '><span>' + numberOfArticleFromAuthor + '</span></a></li>';
-            titlesOfArticles.insertAdjacentHTML('beforeend', linkHTMLWithArticle);
+            const linkHTMLData7 = { articleLinkFromAuthor: arrayWithidFromAuthor[i], articleNameFromAuthor: numberOfArticleFromAuthor };
+            const linkHTML7 = templates.articlesListFromAuthors(linkHTMLData7);
+            titlesOfArticles.insertAdjacentHTML('beforeend', linkHTML7);
             articlesActive.push(arrayWithidFromAuthor[i]);
         }
     }
 
     const targetArticlebylink = document.getElementById(articlesActive[0]);
     targetArticlebylink.classList.add('active');
+
     const titleClickHandlerbyLinks = function (event) {
         event.preventDefault();
         const clickedElement = this;
+        console.log(clickedElement);
         clickedElement.classList.add('active');
         const activeArticles = document.querySelectorAll('.posts .active');
         for (let activeArticle of activeArticles) {
